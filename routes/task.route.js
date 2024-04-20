@@ -7,9 +7,22 @@ taskRoute.use(Auth);
 
 taskRoute.get("/", async (req, res) => {
   try {
-    const taskList = await TaskModel.find({ userId: req.body.userId });
+    const {page, limit } = req.query;
+    console.log({page, limit});
+    const pageNumber = parseInt(page) || 1; // page come form query if not then by default 1
+    const pageSize = parseInt(limit) || 12; // limit come form query if not then by default 12
+    const totalTask = await TaskModel.countDocuments({userId: req.body.userId}); // it is use for count totle Movies
+    const totalPages = Math.ceil(totalTask / pageSize); // logic for find total page
 
-    res.status(200).json({ taskList });
+    const taskList = await TaskModel.find({userId: req.body.userId})
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
+    res.status(200).json({ 
+      taskList,
+      page: pageNumber, 
+      totalPages,
+      totalTask, 
+     });
   } catch (error) {
     res.status(400).json({ error: "error" });
   }
