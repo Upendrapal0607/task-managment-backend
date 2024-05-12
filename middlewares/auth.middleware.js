@@ -6,7 +6,6 @@ const Auth = async (req, res, next) => {
     const token = req.headers.authorization;
     if (token) {
       const blacklistedToken = await BlackListModel.findOne({ token: token });
-      console.log({ blacklistedToken });
       if (blacklistedToken) {
         res.status(200).send({ msg: "please Login Again!" });
       } else {

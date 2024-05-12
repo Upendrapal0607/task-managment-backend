@@ -17,7 +17,7 @@ userRoute.get("/", async (req, res) => {
 
 userRoute.post("/register", async (req, res) => {
   const resUser = req.body;
-  console.log({ resUser });
+  // console.log({ resUser });
   if (!validator(resUser.password)) {
     res.status(400).send({
       message:
@@ -51,17 +51,18 @@ userRoute.post("/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await UserModel.findOne({ email });
+   ;
     if (user) {
       bcrypt.compare(password, user.password, (err, result) => {
         if (result) {
-          // const expirationTime =
-          // Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 7;
+       
           const token = jwt.sign(
             { userID: user._id, user: user.name },
             process.env.LOGIN_SECRET_KEY || "uesrsecreate",
             { expiresIn: "7d" }
           );
        
+    
           res.status(200).send({ message: "login successful", token, user });
         } else {
           res.status(200).send({ message: "wrong password or email" });
