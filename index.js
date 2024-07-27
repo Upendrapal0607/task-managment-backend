@@ -4,6 +4,7 @@ const { userRoute } = require("./routes/user.route");
 const cors = require("cors");
 const { taskRoute } = require("./routes/task.route");
 const { ProductRoute } = require("./routes/product.route");
+const { projectRoute } = require("./routes/project.route");
 const PORT = process.env.PORT || 8080;
 
 const app = express();
@@ -20,6 +21,7 @@ app.get("/", (req, res) => {
 app.use("/user", userRoute);
 app.use("/task", taskRoute);
 app.use("/products", ProductRoute);
+app.use("/project", projectRoute);
 
 app.use((req, res, next) => {
   res.status(404).send({ message: "route Not found" });

@@ -17,15 +17,7 @@ userRoute.get("/", async (req, res) => {
 
 userRoute.post("/register", async (req, res) => {
   const resUser = req.body;
-  // console.log({ resUser });
-  if (!validator(resUser.password)) {
-    res.status(400).send({
-      message:
-        "password must be at least 8 characters long and special character,char ,Number",
-    });
-    return;
-  }
-  console.log({ resUser });
+
   try {
     const AlraidyExitst = await UserModel.findOne({ email: resUser.email });
     if (AlraidyExitst) {
@@ -55,14 +47,12 @@ userRoute.post("/login", async (req, res) => {
     if (user) {
       bcrypt.compare(password, user.password, (err, result) => {
         if (result) {
-       
           const token = jwt.sign(
             { userID: user._id, user: user.name },
             process.env.LOGIN_SECRET_KEY || "uesrsecreate",
             { expiresIn: "7d" }
           );
-       
-    
+     
           res.status(200).send({ message: "login successful", token, user });
         } else {
           res.status(200).send({ message: "wrong password or email" });
